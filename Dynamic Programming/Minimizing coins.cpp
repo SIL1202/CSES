@@ -19,7 +19,7 @@ int main() {
     for (int j = 0; j < n; j++) { // O(n)
       if (a[j] <= i) {
         // transition
-        dp[i] = min(dp[i], dp[i - a[j]] + 1);
+        dp[i] = min(dp[i], dp[i - a[j]] + 1); // 加一是要加k本身 ex:
       }
     }
   }
