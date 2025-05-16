@@ -4,6 +4,14 @@
 using namespace std;
 
 const int MAX = 2e5 + 5;
+
+/*
+// here should be 1 instead of 0, is the same as init. The answer should be
+modified depending on the requirment void dfs(int u){ sz[n] = 1; for(int v:
+adj[u]) dfs(v), sz[u] += sz[v];
+}
+*/
+
 int main() {
   int n;
   cin >> n;
