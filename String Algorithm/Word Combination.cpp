@@ -1,40 +1,59 @@
+// using trie + dp to solve this question
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 using namespace std;
-#define MOD 1000000007
+const int MOD = 1e9 + 7;
 
-unordered_map<string, bool> mp;
-string input;
-int n;
-vector<int> dp;
+class Trie {
+public:
+  Trie *children[26];
+  bool terminal;
 
-int combination(int index) {
-  if (index == input.size())
-    return 1;
-  if (dp[index] != -1)
-    return dp[index];
-
-  int ans = 0;
-  for (int len = 1; len + index <= input.size(); len++) {
-    string word = input.substr(index, len);
-    if (mp[word]) {
-      ans = (ans + combination(index + len)) % MOD;
-    }
+  Trie() {
+    for (int i = 0; i < 26; ++i)
+      children[i] = NULL;
+    terminal = false;
   }
-  return dp[index] = ans;
-}
+
+  void insert(string s) {
+    Trie *root = this;
+    for (char c : s) {
+      int idx = c - 'a';
+      if (!root->children[idx])
+        root->children[idx] = new Trie();
+      root = root->children[idx];
+    }
+    root->terminal = true;
+  }
+};
 
 int main() {
-  cin >> input;
+  string s;
+  cin >> s;
+  int n;
   cin >> n;
-  for (int i = 0; i < n; i++) {
-    string word;
-    cin >> word;
-    mp[word] = true;
+  vector<string> vec(n);
+  Trie *root = new Trie();
+  for (string &v : vec) {
+    cin >> v;
+    root->insert(v);
   }
 
-  dp.assign(input.size() + 1, -1);
-  cout << combination(0);
+  vector<int> dp(s.size() + 1);
+  dp[0] = 1;
+
+  for (int i = 0; i < s.size(); ++i) {
+    Trie *temp = root;
+    for (int j = i; j < s.size(); ++j) {
+      int idx = s[j] - 'a';
+      if (!temp->children[idx])
+        break;
+      temp = temp->children[idx];
+      if (temp->terminal)
+        dp[j + 1] = (dp[j + 1] + dp[i]) % MOD;
+    }
+  }
+
+  cout << dp[s.size()] << endl;
   return 0;
 }
