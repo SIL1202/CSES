@@ -4,8 +4,39 @@ using namespace std;
 #define ll long long
 
 // =============================
+// Knuth-Morris-Pratt algorithm concise version
+// =============================
+int main() {
+  string s, p;
+  cin >> s >> p;
+  int n = s.length(), m = p.length(), count = 0;
+
+  vector<int> lps(m);
+  for (int i = 1, len = 0; i < m;) {
+    if (p[i] == p[len])
+      lps[i++] = ++len;
+    else if (len)
+      len = lps[len - 1];
+    else
+      lps[i++] = 0;
+  }
+
+  for (int i = 0, j = 0; i < n;) {
+    if (s[i] == p[j])
+      ++i, ++j;
+    if (j == m)
+      ++count, j = lps[j - 1];
+    else if (i < n && s[i] != p[j])
+      j ? j = lps[j - 1] : ++i;
+  }
+
+  cout << count << '\n';
+}
+
+// =============================
 // Knuth-Morris-Pratt algorithm complete version
 // =============================
+/*
 vector<int> LPS(string p) {
   int m = p.length();
   vector<int> lps(m);
@@ -56,6 +87,7 @@ int main() {
   cout << KMP(s, p) << '\n';
   return 0;
 }
+*/
 
 // =============================
 // Rabin-Karp algorithm
